@@ -6,8 +6,13 @@ const knex = require("../data/dbConfig.js");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  const { limit, sortby, sortdir } = req.query;
   try {
-    const accounts = await knex.select("*").from("accounts");
+    const accounts = await knex
+      .select("*")
+      .from("accounts")
+      .orderBy(sortby || "id", sortdir || "asc")
+      .limit(limit || 1000);
     res.status(200).json(accounts);
   } catch (error) {
     console.log(error);
